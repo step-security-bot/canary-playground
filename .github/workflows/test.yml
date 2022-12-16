@@ -4,32 +4,35 @@ on:
     branches: main
   workflow_dispatch:
     
+permissions:  # added using https://github.com/step-security/secure-workflows
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest  
     steps:
-      - uses: step-security/harden-runner@v1
+      - uses: step-security/harden-runner@2e205a28d0e1da00c5f53b161f4067b052c61f34 # v1.5.0
         with:
           allowed-endpoints: 
             github.com:443
             objects.githubusercontent.com:443
             raw.githubusercontent.com:443
             artifacts.codacy.com:443
-      - uses: juliangruber/sleep-action@v1
+      - uses: juliangruber/sleep-action@0ec9cf4f8d053aae56e4b402438184a31c6e87d3 # v1
         with:
           time: 60s
       - run: |
           curl -X GET https://artifacts.codacy.com
       - name: Publish to Codacy
-        uses: codacy/codacy-coverage-reporter-action@v1
+        uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # v1.3.0
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
         continue-on-error: true
-      - uses: juliangruber/sleep-action@v1
+      - uses: juliangruber/sleep-action@0ec9cf4f8d053aae56e4b402438184a31c6e87d3 # v1
         with:
           time: 60s
       - name: Publish to Codacy
-        uses: codacy/codacy-coverage-reporter-action@v1
+        uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # v1.3.0
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
         continue-on-error: true  
